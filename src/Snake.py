@@ -21,7 +21,7 @@ blue = pygame.Color(0, 0, 255)
 #create a window
 screen = pygame.display.set_mode((window_width, window_height))
 clock = pygame.time.Clock()
-pygame.display.set_caption('Snake Game by Edureka')
+pygame.display.set_caption('Snake Game by Dr.Mask')
 
 class Snake:
     def __init__(self):
