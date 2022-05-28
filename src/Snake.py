@@ -27,7 +27,7 @@ pygame.display.set_caption('Snake Game by Dr.Mask')
 
 class Snake:
     def __init__(self):
-        self.snake_position = [100, 50]
+        self.snake_head = [100, 50]
         self.snake_body = [[100, 50]]
 
     def snakeMovement(self):
@@ -59,25 +59,24 @@ class Snake:
  
     # Moving the snake
         if direction == 'UP':
-            self.snake_position[1] -= 10
+            self.snake_head[1] -= 10
         if direction == 'DOWN':
-            self.snake_position[1] += 10
+            self.snake_head[1] += 10
         if direction == 'LEFT':
-            self.snake_position[0] -= 10
+            self.snake_head[0] -= 10
         if direction == 'RIGHT':
-            self.snake_position[0] += 10
+            self.snake_head[0] += 10
 
-        self.snake_body[0][0] = self.snake_position[0]
-        self.snake_body[0][1] = self.snake_position[1]
+        self.snake_body[0][0] = self.snake_head[0]
+        self.snake_body[0][1] = self.snake_head[1]
 
     def renderSnake(self):
         global screen, green
         for pos in self.snake_body:
             pygame.draw.rect(screen, green, [pos[0], pos[1], 10, 10])
-        
+    
 
 snake = Snake()
-
 
 
 #render function
