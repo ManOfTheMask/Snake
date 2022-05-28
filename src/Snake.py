@@ -9,6 +9,8 @@ pygame.init()
 IsOpen = True
 window_width = 800
 window_height = 600
+direction = 'RIGHT'
+change_to = direction
 
 # defining colors
 black = pygame.Color(0, 0, 0)
@@ -25,29 +27,52 @@ pygame.display.set_caption('Snake Game by Dr.Mask')
 
 class Snake:
     def __init__(self):
-        self.snakeposition = [100, 50]
-        self.snakebody = [[100, 50]]
+        self.snake_position = [100, 50]
+        self.snake_body = [[100, 50]]
 
     def snakeMovement(self):
-        global IsOpen
+        global IsOpen, change_to, direction
         for event in pygame.event.get(): 
             if event.type == pygame.QUIT:
                 IsOpen = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    self.snakeposition[0] -= 10
+                    change_to = 'LEFT'
                 if event.key == pygame.K_RIGHT:
-                    self.snakeposition[0] += 10
+                    change_to = 'RIGHT'
                 if event.key == pygame.K_UP:
-                    self.snakeposition[1] -= 10
+                    change_to = 'UP'
                 if event.key == pygame.K_DOWN:
-                    self.snakeposition[1] += 10
-        self.snakebody[0][0] = self.snakeposition[0]
-        self.snakebody[0][1] = self.snakeposition[1]
+                    change_to = 'DOWN'
+
+    # If two keys pressed simultaneously
+    # we don't want snake to move into two directions
+    # simultaneously
+        if change_to == 'UP' and direction != 'DOWN':
+            direction = 'UP'
+        if change_to == 'DOWN' and direction != 'UP':
+            direction = 'DOWN'
+        if change_to == 'LEFT' and direction != 'RIGHT':
+            direction = 'LEFT'
+        if change_to == 'RIGHT' and direction != 'LEFT':
+            direction = 'RIGHT'
+ 
+    # Moving the snake
+        if direction == 'UP':
+            self.snake_position[1] -= 10
+        if direction == 'DOWN':
+            self.snake_position[1] += 10
+        if direction == 'LEFT':
+            self.snake_position[0] -= 10
+        if direction == 'RIGHT':
+            self.snake_position[0] += 10
+
+        self.snake_body[0][0] = self.snake_position[0]
+        self.snake_body[0][1] = self.snake_position[1]
 
     def renderSnake(self):
         global screen, green
-        for pos in self.snakebody:
+        for pos in self.snake_body:
             pygame.draw.rect(screen, green, [pos[0], pos[1], 10, 10])
         
 
@@ -60,7 +85,7 @@ def Render():
     screen.fill((0,0,0))
     snake.renderSnake()
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(20)
 
 #game loop
 while IsOpen:
