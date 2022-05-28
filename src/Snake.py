@@ -75,14 +75,23 @@ class Snake:
         for pos in self.snake_body:
             pygame.draw.rect(screen, green, [pos[0], pos[1], 10, 10])
     
+class Fruit:
+    def __init__(self):
+        global window_width, window_height
+        self.foodx = random.randrange(1, (window_width//10)) * 10
+        self.foody = random.randrange(1, (window_height//10)) * 10
+    
+    def fruit_render(self):
+        global screen, red
+        pygame.draw.rect(screen, red, [self.foodx, self.foody, 10, 10])
 
 snake = Snake()
-
-
+fruit = Fruit()
 #render function
 def Render():
     screen.fill((0,0,0))
     snake.renderSnake()
+    fruit.fruit_render()
     pygame.display.update()
     clock.tick(20)
 
