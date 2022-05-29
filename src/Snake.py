@@ -113,7 +113,6 @@ def fruit_eaten():
         score += 10
         fruit.foodx = random.randrange(1, (window_width//block_size)) * block_size
         fruit.foody = random.randrange(1, (window_height//block_size)) * block_size
-        print(snake.snake_body)
     else:
         snake.snake_body.pop()
         
