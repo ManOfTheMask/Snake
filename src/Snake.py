@@ -32,7 +32,7 @@ pygame.display.set_caption('Snake Game by Dr.Mask')
 class Snake:
     def __init__(self):
         self.snake_head = [100, 50]
-        self.snake_body = [[100, 50]]
+        self.snake_body = [[100, 50], [90, 50], [80, 50]]
 
     def snakeMovement(self):
         global IsOpen, change_to, direction
@@ -113,6 +113,7 @@ def fruit_eaten():
         score += 10
         fruit.foodx = random.randrange(1, (window_width//block_size)) * block_size
         fruit.foody = random.randrange(1, (window_height//block_size)) * block_size
+        print(snake.snake_body)
     else:
         snake.snake_body.pop()
         
