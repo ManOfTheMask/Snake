@@ -51,8 +51,7 @@ class Snake:
                     change_to = 'DOWN'
 
     # If two keys pressed simultaneously
-    # we don't want snake to move into two directions
-    # simultaneously
+    # we don't want snake to move into two directions simultaneously
         if change_to == 'UP' and direction != 'DOWN':
             direction = 'UP'
         if change_to == 'DOWN' and direction != 'UP':
@@ -72,6 +71,9 @@ class Snake:
         if direction == 'RIGHT':
             self.snake_head[0] += block_size
 
+        for x in self.snake_body[1:]:
+            if x == self.snake_head:
+                IsOpen = False
 
     #renders the snake
     def renderSnake(self):
@@ -94,12 +96,42 @@ class Fruit:
 snake = Snake()
 fruit = Fruit()
 
+#game over function
+def game_over():
+    global IsOpen
+    font = pygame.font.SysFont('monaco', 72)
+    text = font.render('Game Over', True, white)
+    text_rect = text.get_rect()
+    text_rect.center = (window_width/2, window_height/2)
+    screen.blit(text, text_rect)
+    pygame.display.update()
+    time.sleep(2)
+    IsOpen = False
+#collision detection
+def collision():
+    global IsOpen
+    for x in snake.snake_body[1:]:
+        if x == snake.snake_head:
+            game_over()
+    if snake.snake_head[0] > window_width or snake.snake_head[0] < 0:
+        game_over()
+    if snake.snake_head[1] > window_height or snake.snake_head[1] < 0:
+        game_over()
+#show the score
+def show_score(score):
+    global screen, white
+    scorestr = str(score)
+    font = pygame.font.SysFont('times new roman', 24)
+    scoretext = font.render(f"Your score is: {scorestr}", True, white)
+    scoretext_rect = scoretext.get_rect()
+    scoretext_rect.center = (90, 20)
+    screen.blit(scoretext, scoretext_rect)
+
 #render function
 def Render():
     screen.fill((0,0,0))
     snake.renderSnake()
     fruit.fruit_render()
-    pygame.display.update()
     clock.tick(16)
 
 #snake and fruit collision detection function
@@ -109,15 +141,18 @@ def fruit_eaten():
 
     if snake.snake_head[0] == fruit.foodx and snake.snake_head[1] == fruit.foody:
         score += 10
+        show_score(score)
         fruit.foodx = random.randrange(1, (window_width//block_size)) * block_size
         fruit.foody = random.randrange(1, (window_height//block_size)) * block_size
     else:
         snake.snake_body.pop()
-        
+
 #game loop
 while IsOpen:
     snake.snakeMovement()
     fruit_eaten()
+    collision()
     Render()
-
+    show_score(score)
+    pygame.display.update()
 pygame.quit()
