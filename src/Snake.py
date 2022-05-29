@@ -11,6 +11,8 @@ window_width = 800
 window_height = 600
 direction = 'RIGHT'
 change_to = direction
+fruit_spawn = True
+score = 0
 
 # defining colors
 black = pygame.Color(0, 0, 0)
@@ -84,6 +86,9 @@ class Fruit:
     def fruit_render(self):
         global screen, red
         pygame.draw.rect(screen, red, [self.foodx, self.foody, 10, 10])
+    
+    
+        
 
 snake = Snake()
 fruit = Fruit()
@@ -93,11 +98,20 @@ def Render():
     snake.renderSnake()
     fruit.fruit_render()
     pygame.display.update()
-    clock.tick(20)
-
+    clock.tick(16)
+    
+def fruit_eaten():
+    global fruit_spawn, score
+    snake.snake_body.insert(0, list(snake.snake_head))
+    if snake.snake_head[0] == fruit.foodx and snake.snake_head[1] == fruit.foody:
+        score += 10
+        fruit_spawn = False
+    else:
+        snake.snake_body.pop()
 #game loop
 while IsOpen:
     snake.snakeMovement()
+    fruit_eaten()
     Render()
 
 pygame.quit()
