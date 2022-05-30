@@ -1,4 +1,3 @@
-#add pygame boilerplate code
 import pygame
 import time
 import random
