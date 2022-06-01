@@ -33,11 +33,13 @@ class Snake:
         self.snake_head = [100, 50]
         self.snake_body = [[100, 50], [90, 50]]
 
+    #controls the snake
     def snakeMovement(self):
         global IsOpen, change_to, direction
         for event in pygame.event.get(): 
             if event.type == pygame.QUIT:
                 IsOpen = False
+
             #arrow key controls
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
@@ -49,8 +51,10 @@ class Snake:
                 if event.key == pygame.K_DOWN:
                     change_to = 'DOWN'
 
-    # If two keys pressed simultaneously
-    # we don't want snake to move into two directions simultaneously
+    # If two keys pressed simultaneously 
+    # will prevent the snake from moving in the 
+    # opposite direction it is facing
+
         if change_to == 'UP' and direction != 'DOWN':
             direction = 'UP'
         if change_to == 'DOWN' and direction != 'UP':
@@ -73,24 +77,36 @@ class Snake:
         for x in self.snake_body[1:]:
             if x == self.snake_head:
                 IsOpen = False
+    
+    #wall and body collision detection
+    def collision(self):
+        global IsOpen
+        for x in self.snake_body[1:]:
+            if x == self.snake_head:
+                game_over()
+        if self.snake_head[0] > window_width or self.snake_head[0] < 0:
+            game_over()
+        if self.snake_head[1] > window_height or self.snake_head[1] < 0:
+            game_over()
 
     #renders the snake
     def renderSnake(self):
         global screen, green
         for pos in self.snake_body:
             pygame.draw.rect(screen, green, [pos[0], pos[1], block_size, block_size])
+
 #fruit class
 class Fruit:
     def __init__(self):
         global window_width, window_height
         self.foodx = random.randrange(1, (window_width//block_size)) * block_size
         self.foody = random.randrange(1, (window_height//block_size)) * block_size
+
     #renders fruit
     def fruit_render(self):
         global screen, red
         pygame.draw.rect(screen, red, [self.foodx, self.foody, block_size, block_size])
     
-        
 #init objects
 snake = Snake()
 fruit = Fruit()
@@ -106,16 +122,7 @@ def game_over():
     pygame.display.update()
     time.sleep(2)
     IsOpen = False
-#collision detection
-def collision():
-    global IsOpen
-    for x in snake.snake_body[1:]:
-        if x == snake.snake_head:
-            game_over()
-    if snake.snake_head[0] > window_width or snake.snake_head[0] < 0:
-        game_over()
-    if snake.snake_head[1] > window_height or snake.snake_head[1] < 0:
-        game_over()
+
 #show the score
 def show_score(score):
     global screen, white
@@ -150,7 +157,7 @@ def fruit_eaten():
 while IsOpen:
     snake.snakeMovement()
     fruit_eaten()
-    collision()
+    snake.collision()
     Render()
     show_score(score)
     pygame.display.update()
